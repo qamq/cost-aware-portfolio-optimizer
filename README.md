@@ -28,20 +28,20 @@ The core implementation includes:
 
 For the alpha-driven portfolio, the optimizer chooses new weights $w$ relative to pre-trade weights $w_{t^-}$. Define the trade vector
 
-$$
+```math
 \Delta w = w - w_{t^-}.
-$$
+```
 
 The economic objective is
 
-$$
+```math
 \max_w
 \quad
 \alpha^\top w
-- \lambda_{risk} w^\top \Sigma w
-- \eta_{linear}\sum_i s_i |\Delta w_i|
-- \eta_{impact}\sum_i c_i |\Delta w_i|^p,
-$$
+- \lambda_{\mathrm{risk}} w^\top \Sigma w
+- \eta_{\mathrm{linear}}\sum_i s_i |\Delta w_i|
+- \eta_{\mathrm{impact}}\sum_i c_i |\Delta w_i|^p,
+```
 
 where:
 
@@ -50,29 +50,29 @@ where:
 - $s_i$ is the one-way spread cost;
 - $c_i$ is a stock-specific market-impact coefficient;
 - $p$ is the nonlinear impact exponent; and
-- $\lambda_{risk}$, $\eta_{linear}$, and $\eta_{impact}$ control the trade-off among signal, risk, and implementation cost.
+- $\lambda_{\mathrm{risk}}$, $\eta_{\mathrm{linear}}$, and $\eta_{\mathrm{impact}}$ control the trade-off among signal, risk, and implementation cost.
 
 The implementation uses the smooth minimization equivalent
 
-$$
+```math
 J(w)
 =
 \frac{1}{2}w^\top G w
 - \alpha^\top w
-+ \eta_{linear}\sum_i s_i\sqrt{\Delta w_i^2+\varepsilon^2}
-+ \eta_{impact}\sum_i c_i(\Delta w_i^2+\varepsilon^2)^{p/2},
-$$
++ \eta_{\mathrm{linear}}\sum_i s_i\sqrt{\Delta w_i^2+\varepsilon^2}
++ \eta_{\mathrm{impact}}\sum_i c_i(\Delta w_i^2+\varepsilon^2)^{p/2},
+```
 
-with $G=2\lambda_{risk}\Sigma$. The smoothing parameter $\varepsilon$ is numerical only; it does not change the intended economic interpretation of the cost terms.
+with $G=2\lambda_{\mathrm{risk}}\Sigma$. The smoothing parameter $\varepsilon$ is numerical only; it does not change the intended economic interpretation of the cost terms.
 
 The market-impact coefficient is constructed from forecast daily volatility and forecast execution liquidity:
 
-$$
+```math
 c_i
 =
 \kappa\,\sigma_i
 \sqrt{\frac{AUM}{D\cdot ADV_i}},
-$$
+```
 
 where $D$ is the number of execution days. Higher volatility, lower liquidity, or larger AUM therefore makes a given weight change more expensive.
 
@@ -86,24 +86,24 @@ Transaction costs are not treated only as soft penalties. Liquidity also restric
 
 A stock's total position is capped as a fraction of daily ADV:
 
-$$
+```math
 |w_i|
 \leq
 \min\left(
 \text{box cap},
 \frac{\text{position ADV cap}\times ADV_i}{AUM}
 \right).
-$$
+```
 
 ### Trade participation
 
 A single rebalance cannot trade more than a chosen fraction of the execution-window volume:
 
-$$
+```math
 |w_i-w_{t^-,i}|
 \leq
 \frac{\text{trade ADV cap}\times D\times ADV_i}{AUM}.
-$$
+```
 
 These are distinct constraints: the first limits **inventory**, while the second limits **how quickly the portfolio can move**.
 
@@ -117,16 +117,16 @@ The repository uses one authoritative portfolio transition:
 
 ```text
 previous post-trade weights
-        ↓
+        â†“
 realized holding-period returns
-        ↓
+        â†“
 current pre-trade weights
-        ↓
+        â†“
 optimization / target tracking
-        ↓
+        â†“
 current post-trade weights
-        ↓
-Δw = post-trade − pre-trade
+        â†“
+Î”w = post-trade âˆ’ pre-trade
 ```
 
 Previous and current holdings are aligned on their **union**. A security that leaves the signal universe does not disappear from the book; it remains a holding until an explicit trade reduces it toward zero.
@@ -168,8 +168,8 @@ Changing AUM changes:
 
 The research adapters support both:
 
-1. **Fixed-AUM capacity analysis** — repeatedly solve the same strategy at a grid of permanent fund sizes.
-2. **Dynamic-NAV simulation** — allow NAV to evolve through time and feed the current capital base into each subsequent rebalance.
+1. **Fixed-AUM capacity analysis** â€” repeatedly solve the same strategy at a grid of permanent fund sizes.
+2. **Dynamic-NAV simulation** â€” allow NAV to evolve through time and feed the current capital base into each subsequent rebalance.
 
 The standalone public package requires the user to inject a compatible research portfolio manager into these higher-level adapters. The core optimizer itself has no dependency on the original private data pipeline.
 
@@ -179,29 +179,29 @@ The standalone public package requires the user to inject a compatible research 
 
 ```text
 cost-aware-portfolio-optimizer/
-│
-├── src/
-│   └── cost_aware_portfolio/
-│       ├── optimizer.py           # Cost-aware objective, constraints, and solvers
-│       ├── covariance.py          # Rolling/EWMA covariance estimation and PSD repair
-│       ├── state.py               # Pre-trade/post-trade portfolio state transitions
-│       ├── transaction_costs.py   # Canonical execution inputs and unit validation
-│       ├── strategies.py          # Portfolio strategy integration layer
-│       ├── diagnostics.py         # Implementation and cost diagnostics
-│       ├── calculations.py        # Shared portfolio calculations
-│       ├── capacity.py            # Fixed-AUM research adapter
-│       ├── dynamic_nav.py         # Dynamic-NAV research adapter
-│       ├── validation.py          # HAC, block-bootstrap, SPA, and Sharpe inference
-│       ├── regression.py          # Gross-return regression checks
-│       └── fingerprint.py         # Deterministic run/checkpoint fingerprints
-│
-├── examples/
-│   ├── synthetic_rebalance.py
-│   └── capacity_snapshot.py
-│
-├── tests/
-├── docs/
-└── data/
+â”‚
+â”œâ”€â”€ src/
+â”‚   â””â”€â”€ cost_aware_portfolio/
+â”‚       â”œâ”€â”€ optimizer.py           # Cost-aware objective, constraints, and solvers
+â”‚       â”œâ”€â”€ covariance.py          # Rolling/EWMA covariance estimation and PSD repair
+â”‚       â”œâ”€â”€ state.py               # Pre-trade/post-trade portfolio state transitions
+â”‚       â”œâ”€â”€ transaction_costs.py   # Canonical execution inputs and unit validation
+â”‚       â”œâ”€â”€ strategies.py          # Portfolio strategy integration layer
+â”‚       â”œâ”€â”€ diagnostics.py         # Implementation and cost diagnostics
+â”‚       â”œâ”€â”€ calculations.py        # Shared portfolio calculations
+â”‚       â”œâ”€â”€ capacity.py            # Fixed-AUM research adapter
+â”‚       â”œâ”€â”€ dynamic_nav.py         # Dynamic-NAV research adapter
+â”‚       â”œâ”€â”€ validation.py          # HAC, block-bootstrap, SPA, and Sharpe inference
+â”‚       â”œâ”€â”€ regression.py          # Gross-return regression checks
+â”‚       â””â”€â”€ fingerprint.py         # Deterministic run/checkpoint fingerprints
+â”‚
+â”œâ”€â”€ examples/
+â”‚   â”œâ”€â”€ synthetic_rebalance.py
+â”‚   â””â”€â”€ capacity_snapshot.py
+â”‚
+â”œâ”€â”€ tests/
+â”œâ”€â”€ docs/
+â””â”€â”€ data/
 ```
 
 ---
@@ -214,13 +214,17 @@ Python 3.10 or newer is required.
 python -m venv .venv
 ```
 
-Activate the environment:
+Activate the environment.
+
+PowerShell:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+macOS / Linux:
 
 ```bash
-# Windows
-.venv\Scripts\activate
-
-# macOS / Linux
 source .venv/bin/activate
 ```
 
@@ -324,13 +328,13 @@ See [`docs/DATA.md`](docs/DATA.md) for details.
 
 ## Documentation
 
-- [`docs/OBJECTIVE.md`](docs/OBJECTIVE.md) — objective function and economic interpretation
-- [`docs/CONSTRAINTS.md`](docs/CONSTRAINTS.md) — box, position-ADV, trade-ADV, and partial-fill logic
-- [`docs/STATEFUL_REBALANCING.md`](docs/STATEFUL_REBALANCING.md) — drift, portfolio state, and turnover accounting
-- [`docs/CAPACITY.md`](docs/CAPACITY.md) — fixed-AUM and dynamic-NAV methodology
-- [`docs/DATA.md`](docs/DATA.md) — input units and data boundaries
-- [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md) — public/private boundary and reproducibility scope
-- [`docs/INTEGRATION.md`](docs/INTEGRATION.md) — boundary between the standalone package and private research infrastructure
+- [`docs/OBJECTIVE.md`](docs/OBJECTIVE.md) â€” objective function and economic interpretation
+- [`docs/CONSTRAINTS.md`](docs/CONSTRAINTS.md) â€” box, position-ADV, trade-ADV, and partial-fill logic
+- [`docs/STATEFUL_REBALANCING.md`](docs/STATEFUL_REBALANCING.md) â€” drift, portfolio state, and turnover accounting
+- [`docs/CAPACITY.md`](docs/CAPACITY.md) â€” fixed-AUM and dynamic-NAV methodology
+- [`docs/DATA.md`](docs/DATA.md) â€” input units and data boundaries
+- [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md) â€” public/private boundary and reproducibility scope
+- [`docs/INTEGRATION.md`](docs/INTEGRATION.md) â€” boundary between the standalone package and private research infrastructure
 
 ---
 
@@ -350,7 +354,7 @@ Important limitations include:
 
 ## Use and Rights
 
-Copyright © 2026 Quinn McMurtry. All rights reserved.
+Copyright Â© 2026 Quinn McMurtry. All rights reserved.
 
 This repository is made publicly available for research review and portfolio demonstration. **No open-source license is granted.** Unless a license is added later, reuse, redistribution, or incorporation of the source code into other projects requires permission except where otherwise permitted by applicable law.
 

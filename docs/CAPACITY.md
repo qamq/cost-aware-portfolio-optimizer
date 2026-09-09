@@ -18,9 +18,9 @@ The fixed-AUM adapter evaluates a strategy at a grid such as USD 10m, USD 25m, U
 
 The dynamic-NAV adapter compounds
 
-$$
+```math
 NAV_{t+1}=NAV_t(1+R_{net,t})
-$$
+```
 
 and passes the current beginning-of-period NAV into the next rebalance. AUM-sensitive costs and constraints therefore evolve with the realized portfolio path.
 

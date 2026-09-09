@@ -230,12 +230,14 @@ Use this when the portfolio is being chosen endogenously from signal strength.
 This is the TARGET-TRACKING solver. Instead of using a free alpha vector, it
 builds a quadratic penalty around a fixed desired target portfolio:
 
-    target_penalty * || w - w_target ||^2
+    0.5 * target_penalty * || w - scaled_target ||^2
+
+up to an additive constant that does not affect the optimizer.
 
 In code, that is written as:
 
     G = target_penalty * I
-    alpha_vec = target_penalty * w_target
+    alpha_vec = target_penalty * scaled_target
 
 This makes the optimizer ask:
 
