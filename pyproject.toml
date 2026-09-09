@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cost-aware-portfolio-optimizer"
+version = "0.1.0"
+description = "Stateful portfolio rebalancing with spread costs, nonlinear market impact, and ADV constraints"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{name = "Quinn McMurtry"}]
+license = "LicenseRef-All-Rights-Reserved"
+license-files = ["NOTICE.md"]
+keywords = ["portfolio-optimization", "transaction-costs", "market-impact", "quantitative-finance"]
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "scipy>=1.10",
+    "statsmodels>=0.14",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

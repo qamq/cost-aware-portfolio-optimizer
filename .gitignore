@@ -1,0 +1,63 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*.tmp
+*.bak
+*~
+
+# Secrets and local configuration
+.env
+.env.*
+*.pem
+*.key
+
+# Data, model, and compressed artifacts
+*.csv
+*.csv.gz
+*.parquet
+*.pq
+*.feather
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+*.joblib
+*.npy
+*.npz
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.zip
+*.7z
+
+# Research outputs
+outputs/
+checkpoints/
+analysis_outputs/
+figures/generated/
+
+# Keep the public data directory documentation-only unless examples are explicitly opted in.
+/data/*
+!/data/README.md
+!/data/synthetic/
+!/data/fixtures/
+!/data/synthetic/**
+!/data/fixtures/**
