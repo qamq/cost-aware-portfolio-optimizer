@@ -12,15 +12,15 @@ The research workflow **re-optimizes at each AUM** because fund size changes bot
 
 ## Fixed-AUM analysis
 
-The fixed-AUM adapter evaluates a strategy at a grid such as $10m, $25m, $50m, $100m, $250m, $500m, and $1bn. Each point is a separate portfolio run.
+The fixed-AUM adapter evaluates a strategy at a grid such as USD 10m, USD 25m, USD 50m, USD 100m, USD 250m, USD 500m, and USD 1bn. Each point is a separate portfolio run.
 
 ## Dynamic NAV
 
 The dynamic-NAV adapter compounds
 
-\[
+$$
 NAV_{t+1}=NAV_t(1+R_{net,t})
-\]
+$$
 
 and passes the current beginning-of-period NAV into the next rebalance. AUM-sensitive costs and constraints therefore evolve with the realized portfolio path.
 

@@ -16,8 +16,8 @@ The old and new portfolios are aligned on their union. A security therefore cann
 
 One-way turnover follows the project convention
 
-\[
+$$
 \text{turnover}_{1w}=\frac{1}{2}\sum_i|\Delta w_i|.
-\]
+$$
 
 For a combined long-short portfolio, the low sleeve is signed negative and the high sleeve positive before the authoritative trade vector is constructed. This correctly nets names that migrate directly between sleeves.

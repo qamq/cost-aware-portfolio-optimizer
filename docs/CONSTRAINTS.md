@@ -10,9 +10,9 @@ The optimizer combines soft trading-cost penalties with hard feasibility constra
 
 The maximum position size is constrained by daily dollar ADV:
 
-\[
+$$
 |w_i| \leq \text{pos\_adv\_cap}\frac{ADV_i}{AUM}.
-\]
+$$
 
 The position cap is an inventory/capacity constraint and intentionally uses daily ADV.
 
@@ -20,11 +20,11 @@ The position cap is an inventory/capacity constraint and intentionally uses dail
 
 The maximum one-rebalance change is
 
-\[
+$$
 |w_i-w_{prev,i}|
 \leq
 \text{trade\_adv\_cap}\frac{D\,ADV_i}{AUM}.
-\]
+$$
 
 This is an execution-speed constraint. Increasing `execution_days` expands the amount that may be traded and also changes the market-impact coefficient through execution-window volume.
 

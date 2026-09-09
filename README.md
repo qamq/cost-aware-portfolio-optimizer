@@ -26,55 +26,55 @@ The core implementation includes:
 
 ## Economic Objective
 
-For the alpha-driven portfolio, the optimizer chooses new weights \(w\) relative to pre-trade weights \(w_{t^-}\). Define the trade vector
+For the alpha-driven portfolio, the optimizer chooses new weights $w$ relative to pre-trade weights $w_{t^-}$. Define the trade vector
 
-\[
+$$
 \Delta w = w - w_{t^-}.
-\]
+$$
 
 The economic objective is
 
-\[
+$$
 \max_w
 \quad
 \alpha^\top w
 - \lambda_{risk} w^\top \Sigma w
 - \eta_{linear}\sum_i s_i |\Delta w_i|
 - \eta_{impact}\sum_i c_i |\Delta w_i|^p,
-\]
+$$
 
 where:
 
-- \(\alpha\) is the expected-return or ranking signal;
-- \(\Sigma\) is the covariance matrix;
-- \(s_i\) is the one-way spread cost;
-- \(c_i\) is a stock-specific market-impact coefficient;
-- \(p\) is the nonlinear impact exponent; and
-- \(\lambda_{risk}\), \(\eta_{linear}\), and \(\eta_{impact}\) control the trade-off among signal, risk, and implementation cost.
+- $\alpha$ is the expected-return or ranking signal;
+- $\Sigma$ is the covariance matrix;
+- $s_i$ is the one-way spread cost;
+- $c_i$ is a stock-specific market-impact coefficient;
+- $p$ is the nonlinear impact exponent; and
+- $\lambda_{risk}$, $\eta_{linear}$, and $\eta_{impact}$ control the trade-off among signal, risk, and implementation cost.
 
 The implementation uses the smooth minimization equivalent
 
-\[
+$$
 J(w)
 =
 \frac{1}{2}w^\top G w
 - \alpha^\top w
 + \eta_{linear}\sum_i s_i\sqrt{\Delta w_i^2+\varepsilon^2}
 + \eta_{impact}\sum_i c_i(\Delta w_i^2+\varepsilon^2)^{p/2},
-\]
+$$
 
-with \(G=2\lambda_{risk}\Sigma\). The smoothing parameter \(\varepsilon\) is numerical only; it does not change the intended economic interpretation of the cost terms.
+with $G=2\lambda_{risk}\Sigma$. The smoothing parameter $\varepsilon$ is numerical only; it does not change the intended economic interpretation of the cost terms.
 
 The market-impact coefficient is constructed from forecast daily volatility and forecast execution liquidity:
 
-\[
+$$
 c_i
 =
 \kappa\,\sigma_i
 \sqrt{\frac{AUM}{D\cdot ADV_i}},
-\]
+$$
 
-where \(D\) is the number of execution days. Higher volatility, lower liquidity, or larger AUM therefore makes a given weight change more expensive.
+where $D$ is the number of execution days. Higher volatility, lower liquidity, or larger AUM therefore makes a given weight change more expensive.
 
 ---
 
@@ -86,24 +86,24 @@ Transaction costs are not treated only as soft penalties. Liquidity also restric
 
 A stock's total position is capped as a fraction of daily ADV:
 
-\[
+$$
 |w_i|
 \leq
 \min\left(
 \text{box cap},
 \frac{\text{position ADV cap}\times ADV_i}{AUM}
 \right).
-\]
+$$
 
 ### Trade participation
 
 A single rebalance cannot trade more than a chosen fraction of the execution-window volume:
 
-\[
+$$
 |w_i-w_{t^-,i}|
 \leq
 \frac{\text{trade ADV cap}\times D\times ADV_i}{AUM}.
-\]
+$$
 
 These are distinct constraints: the first limits **inventory**, while the second limits **how quickly the portfolio can move**.
 
